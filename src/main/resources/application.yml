@@ -1,0 +1,28 @@
+server:
+  port: 9001
+spring:
+    application:
+        name: bff
+    cloud:
+        gateway:
+            routes:
+                - id: customer-service
+                  predicates:
+                      - Path=/v1/customers/**
+                  uri: http://localhost:9000
+                  filters:
+                    - name: LoggingFilter
+                      args:
+                        baseMessage:
+                        preLogger: true
+                        postLogger: true
+    reactor:
+        context-propagation: AUTO
+logging:
+  structured:
+    format:
+      console: ecs
+
+  level:
+    root: ${LOG_LEVEL_ROOT:INFO}
+    com.example.bff: ${LOG_LEVEL_APP:DEBUG}
